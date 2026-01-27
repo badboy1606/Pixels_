@@ -57,12 +57,12 @@ if ! command_exists git; then
     esac
 fi
 
-if [ ! -d "Pixels_Seminar" ]; then
-    echo "Cloning the repository..."
-    git clone https://github.com/SRA-VJTI/Pixels_Seminar.git
+# Ensure script is run from repo root
+if [ ! -f "install.sh" ]; then
+    echo "run this script from the repository root"
+    exit 1
 fi
 
-cd Pixels_Seminar
 
 # Check if OpenCV is installed
 if pkg-config --exists opencv4 sdl2; then
@@ -83,9 +83,9 @@ case "$OS" in
         fi
         
         export DEBIAN_FRONTEND=noninteractive
-        ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
-        apt-get install -y tzdata
-        dpkg-reconfigure --frontend noninteractive tzdata
+        sudo ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
+        sudo apt-get install -y tzdata
+        sudo dpkg-reconfigure --frontend noninteractive tzdata
 
         # Install pkg-config and OpenCV dependencies
         sudo apt update -y

@@ -59,11 +59,11 @@ OpenCV library and other dependencies need to be installed on your system. Follo
 #### **Step 1: Clone the Repository**
 If `git` is installed, clone the repository:
 ```sh
-git clone https://github.com/SRA-VJTI/Pixels_Seminar.git
+git clone https://github.com/SRA-VJTI/Pixels.git
 ```
 Navigate to the repository:
 ```sh
-cd Pixels_Seminar
+cd Pixels
 ```
 
 #### **Step 2: Install Dependencies**
@@ -99,7 +99,7 @@ This will install the required dependencies, including `make`.
 ### **Method 2: If `git` is Not Installed**
 Manually download and run the installation script:
 ```sh
-wget https://raw.githubusercontent.com/SRA-VJTI/Pixels_Seminar/main/install.sh -O install.sh
+wget https://raw.githubusercontent.com/SRA-VJTI/Pixels/main/install.sh -O install.sh
 chmod +x install.sh
 ./install.sh
 ```
