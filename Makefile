@@ -1,28 +1,56 @@
-# Makefile for installation of opencv and other dependencies
 
-#check if OpenCV is installed(check for not found error) print true if not found, false if found
-OPENCV_INSTALLED := $(shell pkg-config --exists opencv4 sdl2 && echo true || echo false | awk '{print $1}')
+PKG_CONFIG := pkg-config
 
-# Install OpenCV libraries if needed, Debian, Mac, and Arch Linux
-# if pkg-config returns an error, then OpenCV is not installed
+OPENCV_OK := $(shell $(PKG_CONFIG) --exists opencv4 && echo yes || echo no)
+SDL_OK    := $(shell $(PKG_CONFIG) --exists sdl2 && echo yes || echo no)
+
+OS := $(shell . /etc/os-release 2>/dev/null && echo $$ID_LIKE)
+
 install:
-	@echo "Checking if OpenCV is installed..."
-ifeq ($(OPENCV_INSTALLED), true)
-	@echo "OpenCV is installed"
-else
-	@echo "OpenCV is not installed"
-	@echo "Installing OpenCV..."
-ifeq ($(shell cat /etc/os-release | awk '{if (match ($$0, /debian/)) {print "true"; exit;}}'),true)
-	@echo "Debian"
-	@sudo apt-get update -y
-	@sudo apt-get install libopencv-dev libsdl2-2.0-0 libsdl2-image-dev libsdl2-dev -y
-else ifeq ($(shell uname -a | awk '{if (match ($$0, /Darwin/)) print "true"}'),true)
-	@echo "Mac"
-	@brew install opencv sdl2
-else ifeq ($(shell cat /etc/os-release | awk '{if (match ($$0, /arch/)) {print "true"; exit;}}'),true)
-	@echo "Arch Linux"
-	@sudo pacman -Sy opencv hdf5 glew vtk fmt sdl2
-else
-	@echo "Unknown OS"
+	@echo "Checking dependencies..."
+
+ifeq ($(OPENCV_OK),yes)
+ifeq ($(SDL_OK),yes)
+	@echo "OpenCV and SDL already installed"
+	@exit 0
 endif
 endif
+
+	@echo "installing missing dependencies..."
+
+ifneq (,$(findstring ubuntu,$(OS)))
+	@sudo apt update -y
+	@sudo apt install -y \
+		build-essential \
+		make \
+		pkg-config \
+		libopencv-dev \
+		libsdl2-dev \
+		libsdl2-image-dev
+
+else ifneq (,$(findstring debian,$(OS)))
+	@sudo apt update -y
+	@sudo apt install -y \
+		build-essential \
+		make \
+		pkg-config \
+		libopencv-dev \
+		libsdl2-dev \
+		libsdl2-image-dev
+
+else ifneq (,$(findstring arch,$(OS)))
+	@sudo pacman -Sy --noconfirm \
+		base-devel \
+		pkg-config \
+		opencv \
+		sdl2
+
+else ifneq (,$(findstring darwin,$(OS)))
+	@brew install pkg-config opencv sdl2
+
+else
+	@echo "Unsupported OS: $(OS)"
+	@exit 1
+endif
+
+	@echo "Dependencies installed successfully"
