@@ -7,8 +7,7 @@ REPO_NAME="Pixels"
 command_exists() {
     command -v "$1" &>/dev/null
 }
-
-#OS detection 
+#detect os 
 OS=""
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -34,7 +33,7 @@ if ! command_exists sudo; then
     esac
 fi
 
-#git installation
+# Ensure Git is installed
 if ! command_exists git; then
     echo "Installing git..."
     case "$OS" in
@@ -62,7 +61,6 @@ if ! command_exists make; then
         macos) brew install make ;;
     esac
 fi
-
 
 echo "Installing dependencies via make"
 make install
