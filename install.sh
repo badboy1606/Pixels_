@@ -22,9 +22,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 elif grep -q "WSL" /proc/version &>/dev/null; then
     OS="wsl"
 fi
-
-
-
+#updates
 if ! command_exists sudo; then
     case "$OS" in
         debian|wsl) su -c "apt update && apt install sudo -y" ;;
