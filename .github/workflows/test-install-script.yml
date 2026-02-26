@@ -37,6 +37,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.image }}
+    env:
+      DEBIAN_FRONTEND: noninteractive
+
 
     steps:
       - uses: actions/checkout@v3
@@ -45,6 +48,14 @@ jobs:
 
       - name: Make install.sh Executable
         run: chmod +x install.sh
+      
+      - name: Arch Linux Specific Setup
+        if: matrix.os == 'archlinux'
+        run: |
+          pacman -Sy --noconfirm archlinux-keyring
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm sudo
+        
 
       - name: Run Installation Script
         run: ./install.sh
@@ -66,12 +77,12 @@ jobs:
         run: |
           wsl sudo apt update -y
           wsl sudo apt install dos2unix -y
-          wsl dos2unix "/mnt/d/a/Pixels_Seminar/Pixels_Seminar/install.sh"  # Convert line endings 
+          wsl dos2unix "$GITHUB_WORKSPACE/install.sh"  # Convert line endings 
 
       - name: Make Executable and Run Script
         run: |
-          wsl chmod +x "/mnt/d/a/Pixels_Seminar/Pixels_Seminar/install.sh"
-          wsl bash "/mnt/d/a/Pixels_Seminar/Pixels_Seminar/install.sh"  # Run the script
+          wsl chmod +x "$GITHUB_WORKSPACE/install.sh"
+          wsl bash "$GITHUB_WORKSPACE/install.sh"  # Run the script
 
   macos:
     name: MacOS Latest
