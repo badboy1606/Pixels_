@@ -37,6 +37,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.image }}
+    env:
+      DEBIAN_FRONTEND: noninteractive
+
 
     steps:
       - uses: actions/checkout@v3
