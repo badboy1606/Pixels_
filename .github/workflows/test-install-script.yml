@@ -71,8 +71,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up WSL2
-        uses: vedantmgoyal9/setup-wsl2@main
-
+        uses: vampire/setup-wsl@v6
       - name: Install dos2unix and Convert Line Endings
         run: |
           wsl sudo apt update -y
