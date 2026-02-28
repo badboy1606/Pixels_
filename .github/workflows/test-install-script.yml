@@ -18,6 +18,7 @@ on:
     paths:
       - '.github/workflows/test-install-script.yml'
       - 'install.sh'
+  workflow_dispatch:
 
 jobs:
   linux:
@@ -74,12 +75,7 @@ jobs:
         uses: vampire/setup-wsl@v6
 
       - name: Make Executable and Run Script
-        run: |
-          wsl bash -c "
-          cd \$(wslpath '${{ github.workspace }}') &&
-          chmod +x install.sh &&
-          ./install.sh
-          "
+        run: wsl bash -c "cd `$(wslpath -u '${{ github.workspace }}') && chmod +x install.sh && ./install.sh"
   macos:
     name: MacOS Latest
     runs-on: macos-latest
