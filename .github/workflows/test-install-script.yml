@@ -72,17 +72,14 @@ jobs:
 
       - name: Set up WSL2
         uses: vampire/setup-wsl@v6
-      - name: Install dos2unix and Convert Line Endings
-        run: |
-          wsl sudo apt update -y
-          wsl sudo apt install dos2unix -y
-          wsl dos2unix "$GITHUB_WORKSPACE/install.sh"  # Convert line endings 
 
       - name: Make Executable and Run Script
         run: |
-          wsl chmod +x "$GITHUB_WORKSPACE/install.sh"
-          wsl bash "$GITHUB_WORKSPACE/install.sh"  # Run the script
-
+          wsl bash -c "
+          cd \$(wslpath '${{ github.workspace }}') &&
+          chmod +x install.sh &&
+          ./install.sh
+          "
   macos:
     name: MacOS Latest
     runs-on: macos-latest
