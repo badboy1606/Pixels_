@@ -21,7 +21,7 @@ else ifeq ($(shell uname -a | awk '{if (match ($$0, /Darwin/)) print "true"}'),t
 	@brew install opencv sdl2 cmake
 else ifeq ($(shell cat /etc/os-release | awk '{if (match ($$0, /arch/)) {print "true"; exit;}}'),true)
 	@echo "Arch Linux"
-	@sudo pacman -Sy opencv hdf5 glew vtk fmt sdl2 cmake base-devel
+	@sudo pacman -Sy --noconfirm opencv hdf5 glew vtk fmt sdl2 cmake base-devel
 else
 	@echo "Unknown OS"
 endif

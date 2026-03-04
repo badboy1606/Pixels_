@@ -1,5 +1,7 @@
 #!/bin/bash
 set -e
+export DEBIAN_FRONTEND=noninteractive
+export TZ=Etc/UTC
 
 REPO_URL="https://github.com/SRA-VJTI/Pixels.git"
 REPO_NAME="Pixels"
@@ -7,9 +9,9 @@ REPO_NAME="Pixels"
 command_exists() {
     command -v "$1" &>/dev/null
 }
+
 #detect os 
 OS=""
-
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     . /etc/os-release
     if [[ "$ID_LIKE" == *"debian"* ]] || [[ "$ID" == "debian" ]] || [[ "$ID" == "ubuntu" ]]; then
@@ -22,12 +24,14 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 elif grep -q "WSL" /proc/version &>/dev/null; then
     OS="wsl"
 fi
+
 #updates
 if ! command_exists sudo; then
     case "$OS" in
-        debian|wsl) su -c "apt update && apt install sudo -y" ;;
-        arch) su -c "pacman -Sy --noconfirm sudo" ;;
-        *) echo "Install sudo manually"; exit 1 ;;
+        debian|wsl) su -c "apt update && apt install -y sudo tzdata";;
+        arch)su -c "pacman -Sy --noconfirm sudo";;
+        *)echo "Install sudo manually"
+        exit 1;;
     esac
 fi
 
@@ -35,7 +39,7 @@ fi
 if ! command_exists git; then
     echo "Installing git..."
     case "$OS" in
-        debian|wsl) sudo apt update && sudo apt install -y git ;;
+        debian|wsl) sudo apt update && sudo apt install -y git tzdata ;;
         arch) sudo pacman -Sy --noconfirm git ;;
         macos) brew install git ;;
     esac
@@ -58,6 +62,10 @@ if ! command_exists make; then
         arch) sudo pacman -Sy --noconfirm make ;;
         macos) brew install make ;;
     esac
+fi
+
+if [[ "$OS" == "arch" ]]; then
+    export PACMAN="pacman -S --noconfirm"
 fi
 
 echo "Installing dependencies via make"
