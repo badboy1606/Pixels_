@@ -53,19 +53,18 @@ jobs:
       - name: Arch Linux Specific Setup
         if: matrix.os == 'archlinux'
         run: |
+          pacman-key --init
+          pacman-key --populate
           pacman -Sy --noconfirm archlinux-keyring
           pacman -Syu --noconfirm
           pacman -S --noconfirm sudo
         
-
       - name: Run Installation Script
         run: ./install.sh
 
-
   wsl:
     name: WSL
-    runs-on: windows-latest
-    
+    runs-on: windows-latest 
     steps:
       - uses: actions/checkout@v3
         with:
@@ -75,7 +74,12 @@ jobs:
         uses: vampire/setup-wsl@v6
 
       - name: Make Executable and Run Script
-        run: wsl bash -c "cd `$(wslpath -u '${{ github.workspace }}') && chmod +x install.sh && ./install.sh"
+        run: |
+          wsl sudo sed -i '/backports/s/^/#/' /etc/apt/sources.list      
+          wsl sudo apt-get update || true
+          wsl sudo apt-get install -y git
+          wsl bash -c "cd `$(wslpath -u '${{ github.workspace }}') && chmod +x install.sh && ./install.sh"
+
   macos:
     name: MacOS Latest
     runs-on: macos-latest
