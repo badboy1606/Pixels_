@@ -97,7 +97,7 @@ This will install the required dependencies, including `make`.
 ---
 
 ### **Method 2: If `git` is Not Installed**
-Manually download and run the installation script:
+Manually download and run the installation script on your device:
 ```sh
 wget https://raw.githubusercontent.com/SRA-VJTI/Pixels/main/install.sh -O install.sh
 chmod +x install.sh
