@@ -2,7 +2,7 @@
 CC = g++
 
 # Defining the name of the object that will be created after using make
-PROJECT = image_segmentation
+PROJECT = face_swap
 
 # Include directories and compiler flags
 CFLAGS = -std=c++11 $(shell pkg-config --cflags opencv4) -Iinclude/
