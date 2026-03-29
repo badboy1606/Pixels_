@@ -83,6 +83,7 @@ int main()
 
         cv::imshow("Original", image);//  show the original image
         cv::imshow("Segmented SWAP", swapped);//show the swaped image
+        cv::imwrite("assets/output.png", swapped);
         cv::waitKey(0);
         cv::destroyAllWindows();
 
